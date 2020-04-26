@@ -1,0 +1,185 @@
+<html>
+
+<head>
+	<title>Arcado</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<script src="https://kit.fontawesome.com/f776ee7346.js" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="/style.css" />
+	<link rel="stylesheet" href="/profile.css">
+</head>
+
+<body class="is-preload">
+
+	<!-- Wrapper -->
+	<div id="wrapper">
+
+		<!-- Header -->
+		<header id="header">
+			<h1><a href="/feed">Arcado</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="/feed">Home</a></li>
+					<li><a href="/profile">My Profile</a></li>
+					<li><a href="/login">Log Out</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="menu">
+						<a class="fa-bars" href="#menu">Menu</a>
+					</li>
+				</ul>
+			</nav>
+		</header>
+
+		<!-- Menu -->
+		<section id="menu">
+			<h3>Messages</h3>
+			<section>
+				<ul class="links">
+					<% for(var i=0; i<user.local.messages.length; i++) {%>
+						<li class="message">
+							<span><%= user.local.messages[i].senderEmail %></span>
+							<p><%= user.local.messages[i].message %></p>
+
+							<!-- Reply To Message -->
+							<form action="/directMessage" method="POST">
+								<input id="senderId" type="hidden" name="recieverId" value="<%= user.local.messages[i].senderId %>">
+								<input id="thisMessage" type="hidden" name="thisMessage" value="<%= user.local.messages[i].message %>">
+								<input type="text" name="message" value="">
+								<button id="replyButton" type="submit" name="button">Reply</button>
+								<button id="deleteMessage" formaction="/deleteMessage" type="submit" name="deleteButton">Clear </button>
+							</form>
+						</li>
+					<% } %>
+				</ul>
+			</section>
+
+
+		</section>
+
+		<!-- Main -->
+		<div id="main">
+
+			<section id="intro">
+				<a href="#" class="logo"><img src="../images/profile.png" alt="" /></a>
+				<header>
+					<h2><%= pictureUpload[0].userEmail %></h2>
+					<!-- <p id="bio">Enter Your Bio!</p>
+					<button class="submit">Submit Bio</button>
+					<span> 0 Followers </span><span> 0 Following </span> -->
+				</header>
+			</section>
+
+			<!-- Post -->
+			<header>
+				<div class="title" id="postSec">
+					<h2>Send A Message To This User</h2>
+
+					<!-- Direct Message -->
+					<form action="/directMessage" method="POST">
+						<input type="hidden" name="recieverId" value="<%= pictureUpload[0].posterId %>">
+						<input type="text" name="message" value="">
+						<button type="submit" name="button">Send</button>
+					</form>
+				</div>
+			</header>
+
+			<h3>Posts</h3>
+			<ul class="posts">
+				<% for(var i=pictureUpload.length - 1; i>=0; i--) {%>
+
+
+				<article class="post" id="postArticle">
+					<header>
+						<div class="title">
+							<h2><%= pictureUpload[i].userEmail %></h2>
+						</div>
+						<div class="meta">
+							<a href="/userProfile/<%= pictureUpload[i].posterId%>" class="author"><span class="name"><%= pictureUpload[i].userEmail %></span><img src="../images/profile.png" alt="" /></a>
+						</div>
+					</header>
+					<a href="../<%=pictureUpload[i].imgPath%>" class="image featured"><img id="postIMG" src="../<%= pictureUpload[i].imgPath%>" alt="" /></a>
+					<p id="postCaption"><%= pictureUpload[i].caption %></p>
+					<ul class="stats">
+						<span><%= pictureUpload[i].likes %></span>
+						<span class="thumbsUp"><i class="fas fa-heart" aria-hidden="true"></i></span>
+						<div data-id="<%= pictureUpload[i]._id %>"></div>
+						<div data-id="<%= pictureUpload[i].posterId %>"></div>
+					</ul>
+					<% for(const comment of pictureUpload[i].comments){ %>
+						<section id="commentSec">
+							<span data-id="<%= pictureUpload[i]._id %>" > <%= comment.commentPosterEmail %> </span>
+							<p> <%=  comment.CommentPost %>
+								<span  data-id="<%= comment.CommentPosterId %>" class="commentTrash">
+									<% if (comment.CommentPosterId === user._id){ %>
+									<i class="fa fa-trash" ></i><% } %></span></p>
+						</section>
+					<% } %>
+					<form class="comment" action="/comment" method="POST">
+						<input type="text" name="comment" placeholder="Write Your Comment...">
+						<input type="hidden" name="pictureId" value="<%= pictureUpload[i]._id %>">
+						<button type="submit">Post Comment</button>
+					</form>
+				</article>
+				<% } %>
+			</ul>
+			</article>
+
+		</div>
+
+		<!-- Sidebar -->
+		<section id="sidebar">
+			<!-- Mini Posts -->
+			<section>
+				<h3> My Pinned Posts</h3>
+				<div class="mini-posts">
+
+					<!-- Mini Post -->
+					<% for(var i=0; i < user.local.favoritePics.length; i++) {%>
+					<article class="mini-post">
+						<header>
+							<a href="#" class="author"><img src="../images/profile.png" alt="" /></a>
+						</header>
+						<a href="single.html" class="image"><img src="<%= user.local.favoritePics[i]%>" alt="" /></a>
+					</article>
+					<% } %>
+
+				</div>
+			</section>
+
+
+
+			<!-- About -->
+			<section class="blurb">
+				<h2>About</h2>
+				<p>Arcado was created by Elmer Osorio Jr who grew up immersing himself in the creative arts. In this he found an incredibly inclusive community full of people from all corners of the world. Arcados goal is to recreate that community virtually! Start connecting with artists just like you! </p>
+			</section>
+
+			<!-- Footer -->
+			<section id="footer">
+				<ul class="icons">
+					<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+					<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+					<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+					<li><a href="#" class="icon solid fa-rss"><span class="label">RSS</span></a></li>
+					<li><a href="#" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+				</ul>
+				<p class="copyright">&copy; Untitled. Design: <a href="http://html5up.net">HTML5 UP</a>. Images: <a href="http://unsplash.com">Unsplash</a>.</p>
+			</section>
+
+		</section>
+
+	</div>
+
+
+	<script src="../assets/js/jquery.min.js"></script>
+	<script src="../assets/js/browser.min.js"></script>
+	<script src="../assets/js/breakpoints.min.js"></script>
+	<script src="../assets/js/util.js"></script>
+	<script src="../assets/js/other.js"></script>
+	<script type="text/javascript" src="../main.js"></script>
+</body>
+
+</html>

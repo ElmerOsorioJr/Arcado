@@ -1,0 +1,11 @@
+#postArticle {
+  text-align: center;
+}
+
+#postCaption{
+  word-break: break-word;
+}
+
+.submit{
+  display: none
+}
